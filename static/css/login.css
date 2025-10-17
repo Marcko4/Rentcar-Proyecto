@@ -1,0 +1,11 @@
+/* Styles specific to login page */
+.auth-card{border-radius:12px}
+.auth-image{background-image: url('../images/illustration.svg'); background-position:center; background-repeat:no-repeat; background-size:cover}
+
+.form-floating .form-control:focus{box-shadow:none}
+
+.input-group-text{background:transparent;border-right:0}
+.form-control{border-left:0}
+
+/* small helper */
+.invalid-feedback{display:block}

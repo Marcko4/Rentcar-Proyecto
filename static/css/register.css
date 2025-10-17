@@ -1,0 +1,11 @@
+/* Styles specific to register page */
+.auth-card{border-radius:12px}
+.auth-image{background-image: url('../images/illustration.svg'); background-position:center; background-repeat:no-repeat; background-size:cover}
+
+.form-control{
+  transition: box-shadow .15s ease, transform .12s ease;
+}
+
+.form-control:focus{transform: translateY(-2px); box-shadow: 0 8px 30px rgba(2,6,23,0.08)}
+
+.form-note{font-size:.9rem;color:#6c757d}
