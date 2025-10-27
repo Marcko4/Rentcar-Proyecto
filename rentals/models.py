@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Vehicle(models.Model):
@@ -14,30 +15,27 @@ class Vehicle(models.Model):
         return f"{self.make} {self.model} ({self.plate})"
 
 
-class Client(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(blank=True)
-    phone = models.CharField(max_length=30, blank=True)
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
-
-
 class Reservation(models.Model):
     STATUS_CHOICES = [
-        ('P', 'Pending'),
-        ('C', 'Confirmed'),
-        ('X', 'Cancelled'),
+        ('PENDIENTE', 'Pendiente'),
+        ('CONFIRMADA', 'Confirmada'),
+        ('CANCELADA', 'Cancelada'),
+        ('COMPLETADA', 'Completada')
     ]
 
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    nombre = models.CharField(max_length=100)
+    email = models.EmailField()
+    telefono = models.CharField(max_length=20)
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
+    comentarios = models.TextField(blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDIENTE')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
-        return f"Reserva {self.id} - {self.vehicle} para {self.client}"
+        return f"Reserva de {self.vehicle} por {self.user.username}"

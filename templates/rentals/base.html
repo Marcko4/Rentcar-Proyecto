@@ -22,6 +22,11 @@
           <ul class="navbar-nav ms-auto">
             {% if user.is_authenticated %}
               <li class="nav-item"><span class="nav-link">Hola, {{ user.username }}</span></li>
+              {% if user.is_staff or user.is_superuser %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'rentals:admin_rentals' %}">Administrar Rentas</a></li>
+              {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'rentals:my_rentals' %}">Mis Rentas</a></li>
+              {% endif %}
               <li class="nav-item d-flex align-items-center">
                 <form method="post" action="{% url 'rentals:logout' %}" class="m-0 p-0" style="display:inline;">
                   {% csrf_token %}

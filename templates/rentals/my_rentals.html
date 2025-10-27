@@ -1,0 +1,59 @@
+{% extends 'rentals/base.html' %}
+{% load humanize %}
+
+{% block content %}
+  <div class="container py-4">
+    <h2 class="mb-4">Mis Rentas</h2>
+    
+    {% if reservations %}
+      <div class="row">
+        {% for reservation in reservations %}
+          <div class="col-12 mb-4">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-md-2">
+                    {% if reservation.vehicle.image %}
+                      <img src="/static/images/{{ reservation.vehicle.image }}" class="img-fluid rounded" alt="{{ reservation.vehicle }}">
+                    {% endif %}
+                  </div>
+                  <div class="col-md-7">
+                    <h5 class="card-title mb-1">{{ reservation.vehicle.make }} {{ reservation.vehicle.model }}</h5>
+                    <p class="text-muted mb-2">Placa: {{ reservation.vehicle.plate }}</p>
+                    <div class="d-flex flex-wrap gap-3">
+                      <div>
+                        <small class="text-muted d-block">Fecha de inicio</small>
+                        <strong>{{ reservation.fecha_inicio }}</strong>
+                      </div>
+                      <div>
+                        <small class="text-muted d-block">Fecha de fin</small>
+                        <strong>{{ reservation.fecha_fin }}</strong>
+                      </div>
+                      <div>
+                        <small class="text-muted d-block">Estado</small>
+                        <span class="badge {% if reservation.status == 'CONFIRMADA' %}bg-success{% elif reservation.status == 'PENDIENTE' %}bg-warning{% elif reservation.status == 'CANCELADA' %}bg-danger{% else %}bg-info{% endif %}">
+                          {{ reservation.get_status_display }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 text-md-end mt-3 mt-md-0">
+                    <p class="fs-5 fw-bold mb-0">Gs. {{ reservation.vehicle.price|intcomma }}</p>
+                    <small class="text-muted">por día</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center py-5">
+        <i class="bi bi-calendar-x display-1 text-muted mb-3"></i>
+        <h4>No tienes rentas aún</h4>
+        <p class="text-muted">Explora nuestro catálogo y renta tu primer vehículo.</p>
+        <a href="{% url 'rentals:home' %}" class="btn btn-primary">Ver catálogo</a>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
