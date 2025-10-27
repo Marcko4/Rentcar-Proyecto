@@ -1,0 +1,90 @@
+{% extends 'rentals/base.html' %}
+{% load humanize %}
+
+{% block content %}
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0">Administrar Rentas</h2>
+      <div class="btn-group">
+        <button type="button" class="btn btn-outline-primary" data-filter="all">Todas</button>
+        <button type="button" class="btn btn-outline-warning" data-filter="PENDIENTE">Pendientes</button>
+        <button type="button" class="btn btn-outline-success" data-filter="CONFIRMADA">Confirmadas</button>
+        <button type="button" class="btn btn-outline-danger" data-filter="CANCELADA">Canceladas</button>
+      </div>
+    </div>
+    
+    {% if reservations %}
+      <div class="row">
+        {% for reservation in reservations %}
+          <div class="col-12 mb-4">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-md-2">
+                    {% if reservation.vehicle.image %}
+                      <img src="/static/images/{{ reservation.vehicle.image }}" class="img-fluid rounded" alt="{{ reservation.vehicle }}">
+                    {% endif %}
+                  </div>
+                  <div class="col-md-6">
+                    <h5 class="card-title mb-1">{{ reservation.vehicle.make }} {{ reservation.vehicle.model }}</h5>
+                    <p class="text-muted mb-2">Cliente: {{ reservation.nombre }} ({{ reservation.user.username }})</p>
+                    <div class="d-flex flex-wrap gap-3">
+                      <div>
+                        <small class="text-muted d-block">Fecha de inicio</small>
+                        <strong>{{ reservation.fecha_inicio }}</strong>
+                      </div>
+                      <div>
+                        <small class="text-muted d-block">Fecha de fin</small>
+                        <strong>{{ reservation.fecha_fin }}</strong>
+                      </div>
+                      <div>
+                        <small class="text-muted d-block">Teléfono</small>
+                        <strong>{{ reservation.telefono }}</strong>
+                      </div>
+                    </div>
+                    {% if reservation.comentarios %}
+                      <p class="text-muted mt-2 mb-0"><small>{{ reservation.comentarios }}</small></p>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-2">
+                    <span class="badge {% if reservation.status == 'CONFIRMADA' %}bg-success{% elif reservation.status == 'PENDIENTE' %}bg-warning{% elif reservation.status == 'CANCELADA' %}bg-danger{% else %}bg-info{% endif %} d-block mb-2">
+                      {{ reservation.get_status_display }}
+                    </span>
+                    <small class="text-muted">Creada: {{ reservation.created_at|date:"d/m/Y H:i" }}</small>
+                  </div>
+                  <div class="col-md-2">
+                    <form method="post" action="{% url 'rentals:update_reservation_status' reservation.id %}">
+                      {% csrf_token %}
+                      <select name="status" class="form-select form-select-sm mb-2" onchange="this.form.submit()">
+                        {% for value, label in status_choices %}
+                          <option value="{{ value }}" {% if value == reservation.status %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                      </select>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center py-5">
+        <i class="bi bi-calendar-check display-1 text-muted mb-3"></i>
+        <h4>No hay rentas registradas</h4>
+        <p class="text-muted">Cuando los clientes renten vehículos, aparecerán aquí.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  {% block extra_scripts %}
+  <script>
+    document.querySelectorAll('[data-filter]').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const filter = e.target.dataset.filter;
+        window.location.href = `?filter=${filter}`;
+      });
+    });
+  </script>
+  {% endblock %}
+{% endblock %}
