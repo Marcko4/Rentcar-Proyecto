@@ -1,9 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Vehicle(models.Model):
-
     CATEGORY_CHOICES = [
         ('AUTO', 'Auto'),
         ('SUV', 'SUV'),
@@ -17,11 +15,17 @@ class Vehicle(models.Model):
     make = models.CharField(max_length=50)
     model = models.CharField(max_length=50)
     plate = models.CharField(max_length=20, unique=True)
-    image = models.CharField(max_length=200, blank=True, help_text='Ruta relativa en static/images, p.ej. cars/car1.svg')
+
+    # CAMBIADO: antes era CharField. Ahora ImageField (aparece input con explorador de archivos)
+    image = models.ImageField(
+        upload_to='vehicles/', blank=True, null=True, verbose_name='Foto'
+    )
+
     price = models.DecimalField(max_digits=12, decimal_places=0, default=0, help_text='Precio en guaraníes (PYG)')
     year = models.PositiveSmallIntegerField(null=True, blank=True)
     available = models.BooleanField(default=True)
 
+    # Tipo/categoría 
     category = models.CharField(
         max_length=12, choices=CATEGORY_CHOICES, blank=True, null=True, verbose_name='Tipo'
     )

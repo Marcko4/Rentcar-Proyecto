@@ -22,8 +22,9 @@
                 <div class="row align-items-center">
                   <div class="col-md-2">
                     {% if reservation.vehicle.image %}
-                      <img src="/static/images/{{ reservation.vehicle.image }}" class="img-fluid rounded" alt="{{ reservation.vehicle }}">
+                      <img src="{{ reservation.vehicle.image.url }}" class="img-fluid rounded" alt="{{ reservation.vehicle }}">
                     {% endif %}
+
                   </div>
                   <div class="col-md-6">
                     <h5 class="card-title mb-1">{{ reservation.vehicle.make }} {{ reservation.vehicle.model }}</h5>
