@@ -76,10 +76,14 @@
       <div class="col-12 col-sm-6 col-lg-4">
         <div class="card car-card h-100">
           {% if v.image %}
-            <img src="{{ v.image.url }}" class="card-img-top" alt="{{ v }}">
+            {% with 'images/'|add:v.image as imgpath %}
+              <img src="{% static imgpath %}" class="card-img-top" alt="{{ v }}">
+            {% endwith %}
           {% else %}
             <img src="{% static 'images/car1.svg' %}" class="card-img-top" alt="{{ v }}">
           {% endif %}
+
+
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ v.make }} {{ v.model }}</h5>
             {% if v.category %}<span class="badge text-bg-primary mb-2">{{ v.get_category_display }}</span>{% endif %}

@@ -22,8 +22,11 @@
                 <div class="row align-items-center">
                   <div class="col-md-2">
                     {% if reservation.vehicle.image %}
-                      <img src="{{ reservation.vehicle.image.url }}" class="img-fluid rounded" alt="{{ reservation.vehicle }}">
+                      {% with 'images/'|add:reservation.vehicle.image as imgpath %}
+                        <img src="{% static imgpath %}" class="img-fluid rounded" alt="{{ reservation.vehicle }}">
+                      {% endwith %}
                     {% endif %}
+
 
                   </div>
                   <div class="col-md-6">
