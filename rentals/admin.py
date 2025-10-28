@@ -3,7 +3,10 @@ from .models import Vehicle, Reservation
 
 @admin.register(Vehicle)
 class VehicleAdmin(admin.ModelAdmin):
-    list_display = ('make', 'model', 'plate', 'price', 'available')
+    list_display = ('make', 'model', 'plate', 'category', 'price', 'available')  
+    list_filter = ('available', 'category', 'year')  
+    search_fields = ('make', 'model', 'plate')       
+
 
 
 @admin.register(Reservation)

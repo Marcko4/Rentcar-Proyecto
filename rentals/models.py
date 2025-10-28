@@ -3,6 +3,17 @@ from django.contrib.auth.models import User
 
 
 class Vehicle(models.Model):
+
+    CATEGORY_CHOICES = [
+        ('AUTO', 'Auto'),
+        ('SUV', 'SUV'),
+        ('PICKUP', 'Camioneta'),
+        ('MOTO', 'Moto'),
+        ('VAN', 'Van'),
+        ('CAMION', 'Camión'),
+        ('OTRO', 'Otro'),
+    ]
+
     make = models.CharField(max_length=50)
     model = models.CharField(max_length=50)
     plate = models.CharField(max_length=20, unique=True)
@@ -10,6 +21,10 @@ class Vehicle(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=0, default=0, help_text='Precio en guaraníes (PYG)')
     year = models.PositiveSmallIntegerField(null=True, blank=True)
     available = models.BooleanField(default=True)
+
+    category = models.CharField(
+        max_length=12, choices=CATEGORY_CHOICES, blank=True, null=True, verbose_name='Tipo'
+    )
 
     def __str__(self):
         return f"{self.make} {self.model} ({self.plate})"

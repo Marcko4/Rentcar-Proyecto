@@ -72,3 +72,5 @@ input[type="text"], input[type="password"], input[type="email"]{
 .navbar-brand{font-weight:800}
 
 .btn-primary{background:var(--primary);border:none}
+
+form.bg-white.border.rounded-3.p-3.shadow-sm { backdrop-filter: blur(4px); }

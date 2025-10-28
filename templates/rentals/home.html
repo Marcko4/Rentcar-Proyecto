@@ -3,6 +3,74 @@
 
 {% block content %}
   <h2 class="mb-4">Catálogo de Vehículos</h2>
+
+  <!-- Barra de filtros -->
+  <form method="get" class="bg-white border rounded-3 p-3 shadow-sm mb-4">
+    <div class="row g-3 align-items-end">
+      <div class="col-12 col-md-4">
+        <label class="form-label">Buscar</label>
+        <input type="text" name="q" value="{{ filters.q }}" class="form-control" placeholder="Marca, modelo o placa">
+      </div>
+
+      <div class="col-6 col-md-2">
+        <label class="form-label">Tipo</label>
+        <select name="type" class="form-select">
+          <option value="">Todos</option>
+          {% for value,label in categories %}
+            <option value="{{ value }}" {% if filters.type == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-6 col-md-2">
+        <label class="form-label">Año</label>
+        <select name="year" class="form-select">
+          <option value="">Todos</option>
+          {% for y in years %}
+            {% if y %}
+              <option value="{{ y }}" {% if filters.year|stringformat:"s" == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-6 col-md-2">
+        <label class="form-label">Precio mín (Gs.)</label>
+        <input type="number" name="min_price" class="form-control" value="{{ filters.min_price }}" min="0" step="10000" placeholder="{{ price_bounds.min|intcomma }}">
+      </div>
+
+      <div class="col-6 col-md-2">
+        <label class="form-label">Precio máx (Gs.)</label>
+        <input type="number" name="max_price" class="form-control" value="{{ filters.max_price }}" min="0" step="10000" placeholder="{{ price_bounds.max|intcomma }}">
+      </div>
+
+      <div class="col-12 col-md-3">
+        <label class="form-label">Ordenar por</label>
+        <select name="sort" class="form-select" onchange="this.form.submit()">
+          <option value="">Relevancia</option>
+          <option value="price_asc"  {% if filters.sort == 'price_asc'  %}selected{% endif %}>Precio: menor a mayor</option>
+          <option value="price_desc" {% if filters.sort == 'price_desc' %}selected{% endif %}>Precio: mayor a menor</option>
+          <option value="year_desc"  {% if filters.sort == 'year_desc'  %}selected{% endif %}>Año: más nuevo</option>
+          <option value="year_asc"   {% if filters.sort == 'year_asc'   %}selected{% endif %}>Año: más viejo</option>
+        </select>
+      </div>
+
+      <div class="col-6 col-md-2">
+        <button class="btn btn-primary w-100" type="submit"><i class="bi bi-search"></i> Buscar</button>
+      </div>
+
+      <div class="col-6 col-md-2">
+        <a href="{% url 'rentals:home' %}" class="btn btn-outline-secondary w-100">
+          <i class="bi bi-x-circle"></i> Limpiar
+        </a>
+      </div>
+    </div>
+  </form>
+
+  {% if vehicles %}
+    <p class="text-muted mb-3">{{ vehicles|length }} resultado{{ vehicles|length|pluralize:"s" }}</p>
+  {% endif %}
+
   <div class="row g-4">
     {% for v in vehicles %}
       <div class="col-12 col-sm-6 col-lg-4">
@@ -14,6 +82,7 @@
           {% endif %}
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ v.make }} {{ v.model }}</h5>
+            {% if v.category %}<span class="badge text-bg-primary mb-2">{{ v.get_category_display }}</span>{% endif %}
             <p class="card-text text-muted mb-1">Año: {{ v.year }}</p>
             <p class="card-text mb-2">Placa: {{ v.plate }}</p>
             <p class="mt-auto fw-bold">Gs. {{ v.price|intcomma }}</p>
@@ -22,7 +91,7 @@
         </div>
       </div>
     {% empty %}
-      <div class="col-12">No hay vehículos aún.</div>
+      <div class="col-12">No hay vehículos que coincidan con el filtro.</div>
     {% endfor %}
   </div>
 {% endblock %}
