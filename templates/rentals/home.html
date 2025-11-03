@@ -104,7 +104,7 @@
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ v.make }} {{ v.model }}</h5>
             {% if v.category %}
-              <span class="badge text-bg-primary mb-2">{{ v.get_category_display }}</span>
+              {% if v.category %}<span class="badge mb-2" style="background-color:#adb5bd; color:#212529;">{{ v.get_category_display }}</span>{% endif %}
             {% endif %}
             <p class="card-text text-muted mb-1">Año: {{ v.year }}</p>
             <p class="card-text mb-2">Placa: {{ v.plate }}</p>
