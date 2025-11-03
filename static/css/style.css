@@ -91,7 +91,7 @@ a {
 
 .btn:hover {
   transition: transform 0.3s ease-in-out;
-  transform: scale(1.05);  /* Aumentar ligeramente el tamaño al pasar el mouse */
+  transform: scale(1.05);  
 }
 
 
@@ -110,19 +110,19 @@ form.bg-white.border.rounded-3.p-3.shadow-sm {
 
 /* Campos de filtro */
 .form-control, .form-select {
-  font-size: 1rem;         /* Aumentamos el tamaño de la fuente */
-  padding: 1rem;            /* Aumentamos el padding para mayor comodidad */
-  border-radius: 0.375rem;    /* Bordes redondeados */
-  border: 1px solid #ccc;     /* Borde suave */
-  width: 100%;               /* Aumentamos el ancho al 100% */
-  max-width: 350px;          /* Definimos un ancho máximo más grande */
-  background-color: #fff;     /* Fondo blanco para los campos */
+  font-size: 1rem;       
+  padding: 1rem;         
+  border-radius: 0.375rem;  
+  border: 1px solid #ccc;    
+  width: 100%;              
+  max-width: 350px;        
+  background-color: #fff;     
 }
 
 /* Botones de filtro */
 button[type="submit"], .btn-outline-secondary {
-  font-size: 1rem;            /* Aumentamos el tamaño del texto */
-  padding: 1rem 2rem;         /* Aumentamos el tamaño del botón */
+  font-size: 1rem;          
+  padding: 1rem 2rem;       
   border-radius: 0.375rem;
   border: 1px solid #ccc;
   background-color: transparent;
@@ -152,7 +152,7 @@ button[type="submit"]:hover, .btn-outline-secondary:hover {
 /* Botones de filtro */
 button[type="submit"], .btn-outline-secondary {
   font-size: 1rem;
-  padding: 1rem 2rem;          /* Hacemos más grandes los botones */
+  padding: 1rem 2rem;         
   border-radius: 0.375rem;
   border: 1px solid #ccc;
   background-color: transparent;
@@ -269,17 +269,17 @@ button[type="submit"]:hover, .btn-outline-secondary:hover {
 }
 
 .btn-rent {
-  background-color: #0066ff; /* Color de fondo */
-  color: white; /* Color del texto */
-  border: 1px solid transparent; /* Borde transparente */
-  border-radius: 0.375rem; /* Bordes redondeados */
-  padding: 0.75rem 1.5rem; /* Relleno dentro del botón */
-  transition: background-color 0.3s, transform 0.2s ease-in-out; /* Efectos de transición */
+  background-color: #0066ff; 
+  color: white; 
+  border: 1px solid transparent; 
+  border-radius: 0.375rem; 
+  padding: 0.75rem 1.5rem; 
+  transition: background-color 0.3s, transform 0.2s ease-in-out; 
 }
 
 .btn-rent:hover {
-  background-color: #0056b3; /* Color de fondo cuando el mouse pasa por encima */
-  color: white; /* Asegura que el texto se mantenga blanco en hover */
-  transform: scale(1.05); /* Efecto de aumento en el tamaño del botón */
+  background-color: #0056b3; 
+  color: white; 
+  transform: scale(1.05); 
 }
 
