@@ -10,7 +10,7 @@
       <div class="auth-card d-flex overflow-hidden">
         <div class="auth-image d-none d-md-block"></div>
         <div class="auth-body p-4">
-          <h2 class="mb-3">Iniciar sesión</h2>
+          <h2 class="mb-3">Iniciar sesión</h2>  <!-- Título centrado y más pequeño -->
           <form method="post" novalidate>
             {% csrf_token %}
             {% for field in form.visible_fields %}
@@ -39,5 +39,3 @@
     </div>
   </div>
 {% endblock %}
-
-{% comment %} No JS loaded here; validation handled server-side {% endcomment %}
