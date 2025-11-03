@@ -2,17 +2,27 @@
   background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
   border-radius: 16px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-}
-
-.auth-image {
-  background: linear-gradient(135deg, #0066ff 0%, #00b3ff 100%);
-  background-size: cover;
   width: 100%;
-  height: 400px;
+  max-width: 500px;         /* Reducción del tamaño general del formulario */
+  margin: 0 auto;           /* Centramos el formulario horizontalmente */
+  padding: 1.5rem;          /* Padding interno */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .auth-body {
   padding: 2rem;
+}
+
+h2 {
+  font-size: 1.75rem;       /* Reducimos el tamaño del título */
+  text-align: center;       /* Centramos el título */
+  margin-bottom: 1.5rem;
+}
+
+.input-group, .form-control {
+  width: 100%;              /* Aseguramos que los campos ocupen todo el ancho */
 }
 
 input[type="text"], input[type="password"], input[type="email"] {
@@ -24,17 +34,10 @@ input:focus {
   box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2);
 }
 
-.form-note {
-  font-size: 0.875rem;
-  color: #6c757d;
-}
-
 /* Ajustes responsivos */
 @media (max-width: 767px) {
   .auth-card {
-    flex-direction: column;
-  }
-  .auth-body {
-    width: 100%;
+    width: 100%;        /* El formulario ocupa el 100% del ancho en pantallas pequeñas */
+    max-width: none;    /* Eliminamos el máximo ancho en dispositivos pequeños */
   }
 }

@@ -2,13 +2,9 @@
   background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
   border-radius: 16px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-}
-
-.auth-image {
-  background: linear-gradient(135deg, #0066ff 0%, #00b3ff 100%);
-  background-size: cover;
-  width: 100%;
-  height: 400px;
+  width: 100%;          /* Hacemos que el formulario ocupe más espacio */
+  max-width: 600px;      /* Limitar el ancho máximo para evitar que se extienda demasiado */
+  margin: 0 auto;       /* Centramos el formulario */
 }
 
 .auth-body {
@@ -18,6 +14,7 @@
 input[type="text"], input[type="password"], input[type="email"] {
   border-radius: 10px;
   padding: 12px;
+  width: 100%;           /* Hacemos que los campos de texto ocupen todo el ancho disponible */
 }
 
 input:focus {
@@ -27,7 +24,8 @@ input:focus {
 /* Ajustes responsivos */
 @media (max-width: 767px) {
   .auth-card {
-    flex-direction: column;
+    width: 100%;        /* En pantallas pequeñas, el formulario ocupará todo el ancho disponible */
+    max-width: none;    /* Eliminamos el máximo ancho en móviles */
   }
   .auth-body {
     width: 100%;

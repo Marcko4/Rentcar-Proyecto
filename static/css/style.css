@@ -62,7 +62,6 @@ a {
   transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
-/* Estilo al pasar el mouse por encima */
 .navbar-nav .nav-item form button:hover {
   color: white;
   background-color: #0056b3;
@@ -92,7 +91,7 @@ a {
 
 .btn:hover {
   transition: transform 0.3s ease-in-out;
-  transform: scale(1.05);  
+  transform: scale(1.05);  /* Aumentar ligeramente el tamaño al pasar el mouse */
 }
 
 
@@ -111,18 +110,19 @@ form.bg-white.border.rounded-3.p-3.shadow-sm {
 
 /* Campos de filtro */
 .form-control, .form-select {
-  font-size: 0.875rem;         /* Reducir tamaño de la fuente */
-  padding: 0.5rem;            /* Reducir padding */
+  font-size: 1rem;         /* Aumentamos el tamaño de la fuente */
+  padding: 1rem;            /* Aumentamos el padding para mayor comodidad */
   border-radius: 0.375rem;    /* Bordes redondeados */
   border: 1px solid #ccc;     /* Borde suave */
-  max-width: 200px;           /* Limitar el ancho máximo de los campos */
+  width: 100%;               /* Aumentamos el ancho al 100% */
+  max-width: 350px;          /* Definimos un ancho máximo más grande */
   background-color: #fff;     /* Fondo blanco para los campos */
 }
 
 /* Botones de filtro */
 button[type="submit"], .btn-outline-secondary {
-  font-size: 0.875rem;
-  padding: 0.5rem 1rem;
+  font-size: 1rem;            /* Aumentamos el tamaño del texto */
+  padding: 1rem 2rem;         /* Aumentamos el tamaño del botón */
   border-radius: 0.375rem;
   border: 1px solid #ccc;
   background-color: transparent;
@@ -151,8 +151,8 @@ button[type="submit"]:hover, .btn-outline-secondary:hover {
 
 /* Botones de filtro */
 button[type="submit"], .btn-outline-secondary {
-  font-size: 0.875rem;
-  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  padding: 1rem 2rem;          /* Hacemos más grandes los botones */
   border-radius: 0.375rem;
   border: 1px solid #ccc;
   background-color: transparent;
@@ -169,8 +169,9 @@ button[type="submit"]:hover, .btn-outline-secondary:hover {
 /* Etiquetas */
 .form-label {
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 1rem;
   margin-bottom: 0.25rem;
+  padding: 0.25rem;
 }
 
 /* Ajuste de las columnas para los filtros */
@@ -265,5 +266,20 @@ button[type="submit"]:hover, .btn-outline-secondary:hover {
   border: 1px solid #ddd;
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
+}
+
+.btn-rent {
+  background-color: #0066ff; /* Color de fondo */
+  color: white; /* Color del texto */
+  border: 1px solid transparent; /* Borde transparente */
+  border-radius: 0.375rem; /* Bordes redondeados */
+  padding: 0.75rem 1.5rem; /* Relleno dentro del botón */
+  transition: background-color 0.3s, transform 0.2s ease-in-out; /* Efectos de transición */
+}
+
+.btn-rent:hover {
+  background-color: #0056b3; /* Color de fondo cuando el mouse pasa por encima */
+  color: white; /* Asegura que el texto se mantenga blanco en hover */
+  transform: scale(1.05); /* Efecto de aumento en el tamaño del botón */
 }
 
