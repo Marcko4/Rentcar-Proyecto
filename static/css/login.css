@@ -3,9 +3,9 @@
   border-radius: 16px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.15);
   width: 100%;
-  max-width: 500px;         /* Reducción del tamaño general del formulario */
-  margin: 0 auto;           /* Centramos el formulario horizontalmente */
-  padding: 1.5rem;          /* Padding interno */
+  max-width: 500px;         
+  margin: 0 auto;          
+  padding: 1.5rem;         
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -16,13 +16,13 @@
 }
 
 h2 {
-  font-size: 1.75rem;       /* Reducimos el tamaño del título */
-  text-align: center;       /* Centramos el título */
+  font-size: 1.75rem;       
+  text-align: center;       
   margin-bottom: 1.5rem;
 }
 
 .input-group, .form-control {
-  width: 100%;              /* Aseguramos que los campos ocupen todo el ancho */
+  width: 100%;             
 }
 
 input[type="text"], input[type="password"], input[type="email"] {
@@ -37,7 +37,7 @@ input:focus {
 /* Ajustes responsivos */
 @media (max-width: 767px) {
   .auth-card {
-    width: 100%;        /* El formulario ocupa el 100% del ancho en pantallas pequeñas */
-    max-width: none;    /* Eliminamos el máximo ancho en dispositivos pequeños */
+    width: 100%;        
+    max-width: none;   
   }
 }
