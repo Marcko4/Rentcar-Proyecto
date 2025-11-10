@@ -36,15 +36,14 @@ class RentForm(forms.Form):
         'class': 'form-control', 'placeholder': 'Tu número de contacto'}))
     fecha_inicio = forms.DateField(label="Fecha de inicio", widget=forms.DateInput(attrs={
         'class': 'form-control', 'type': 'date'}))
-    fecha_fin = forms.DateField(label="Fecha de fin", widget=forms.DateInput(attrs={
-        'class': 'form-control', 'type': 'date'}))
+    dias = forms.IntegerField(label="Días de renta", min_value=1, widget=forms.NumberInput(attrs={
+        'class': 'form-control', 'placeholder': 'Cantidad de días', 'min': 1
+    }))
     comentarios = forms.CharField(label="Comentarios", required=False, widget=forms.Textarea(attrs={
         'class': 'form-control', 'placeholder': 'Detalles adicionales', 'rows': 2}))
 
     def clean(self):
         cleaned_data = super().clean()
-        fecha_inicio = cleaned_data.get('fecha_inicio')
-        fecha_fin = cleaned_data.get('fecha_fin')
-
-        if fecha_inicio and fecha_fin and fecha_inicio > fecha_fin:
-            raise forms.ValidationError("La fecha de fin debe ser posterior a la fecha de inicio")
+        dias = cleaned_data.get('dias')
+        if dias is not None and dias < 1:
+            raise forms.ValidationError("La cantidad de días debe ser al menos 1")

@@ -1,39 +1,35 @@
-# Rentcar — Guía rápida para colaboradores
+# Rentcar — Guía rápida (Windows)
 
+Proyecto Django para gestionar vehículos y reservas, con generación de comprobantes en PDF.
 
-
-Resumen
-- Proyecto Django para gestionar vehículos y reservas.
-- Configuración por defecto: PostgreSQL (variables en `.env`). También es posible usar SQLite para desarrollo.
-
-Requisitos mínimos
+## Requisitos
 - Python 3.10+
 - Git
--  PostgreSQL
+- PostgreSQL (recomendado; puedes usar SQLite para desarrollo si lo prefieres)
 
-1) Clonar el repositorio
+## 1) Clonar
 
 ```cmd
 git clone <repo-url>
-cd Rentcar
+cd Rentcar-Proyecto
 ```
 
-2) Crear y activar un entorno virtual (Windows - cmd)
+## 2) Crear venv e instalar dependencias
 
 ```cmd
 python -m venv .venv
 .venv\Scripts\activate
-```
-
-3) Instalar dependencias
-
-```cmd
 pip install -r requirements.txt
 ```
 
-4) Configurar variables de entorno
+Si tienes problemas con permisos o múltiples Pythons, usa el ejecutable de la venv explícitamente:
 
-Crear un archivo `.env` en la raíz del proyecto (NO subirlo al repositorio). Ejemplo mínimo:
+```cmd
+"%CD%\.venv\Scripts\pip.exe" install -r requirements.txt
+```
+
+## 3) Variables de entorno
+Crea un archivo `.env` en la raíz del proyecto (no lo subas al repo). Ejemplo mínimo:
 
 ```env
 # Django
@@ -41,7 +37,7 @@ SECRET_KEY=replace_me_with_a_secure_value
 DEBUG=True
 ALLOWED_HOSTS=127.0.0.1,localhost
 
-# PostgreSQL (opcional)
+# Base de datos (PostgreSQL)
 DB_NAME=rentcar_db
 DB_USER=rentcar_user
 DB_PASSWORD=secret
@@ -49,69 +45,71 @@ DB_HOST=localhost
 DB_PORT=5432
 ```
 
-5) Migraciones y superusuario
+Zona horaria (settings.py):
+- Ajustada a `America/Asuncion`. Cambia este valor si tu equipo está en otra zona.
+
+## 4) Migraciones y superusuario
 
 ```cmd
-python manage.py migrate
-python manage.py createsuperuser
+"%CD%\.venv\Scripts\python.exe" manage.py migrate
+"%CD%\.venv\Scripts\python.exe" manage.py createsuperuser
 ```
 
-6) Cargar datos de ejemplo (opcional)
+## 5) Datos de ejemplo (opcional)
 
 ```cmd
-python scripts\create_samples.py
+"%CD%\.venv\Scripts\python.exe" scripts\create_samples.py
 ```
 
-7) Ejecutar el servidor en desarrollo
+## 6) Ejecutar el servidor (usa SIEMPRE la venv)
+
+Para evitar el error de librerías (por ejemplo, `No module named 'xhtml2pdf'`), arranca con el Python de la venv:
 
 ```cmd
-python manage.py runserver
+"%CD%\.venv\Scripts\python.exe" manage.py runserver
 ```
 
-Estructura del proyecto (resumen para colaboradores)
+## 7) Comprobantes (factura)
+- Al confirmar una renta, se descarga automáticamente el PDF del comprobante.
+- También puedes:
+  - Ver el comprobante en HTML: `/reservations/<id>/invoice/`
+  - Descargar el PDF: `/reservations/<id>/invoice/download/`
+- En “Mis Rentas” y en el admin de Django, hay botones de “Ver comprobante” y “Descargar PDF”.
 
+## Estructura
 - `manage.py` — comandos de Django.
-- `rentcar/` — configuración del proyecto (`settings.py`, `urls.py`, `wsgi.py`).
-- `rentals/` — app principal: modelos, vistas, formularios, tests y admin.
-  - `rentals/models.py` — `Vehicle`, `Reservation`.
-  - `rentals/forms.py` — formularios: registro, login y reserva.
-  - `rentals/views.py` — vistas públicas y administrativas.
-  - `rentals/urls.py` — rutas de la app (namespace `rentals`).
-- `templates/` — plantillas HTML (incluye `templates/rentals/`).
-- `static/` — CSS, imágenes y otros assets.
-- `scripts/` — utilidades (por ejemplo `create_samples.py`).
+- `rentcar/` — settings, urls, wsgi.
+- `rentals/` — app principal (modelos, vistas, formularios, admin).
+- `templates/` — plantillas HTML.
+- `static/` — CSS, imágenes y assets.
+- `scripts/` — utilidades.
 
-Dependencias y notas sobre `requirements.txt`
+## Dependencias clave
+- `Django>=4.2`
+- `python-dotenv`
+- `psycopg2-binary` (si usas PostgreSQL)
+- `Pillow`
+- `xhtml2pdf` (PDF; incluye `reportlab`, `pypdf` y otras)
 
-- `requirements.txt` contiene las librerías necesarias actualmente:
-  - `Django>=4.2`
-  - `psycopg2-binary` (si usas PostgreSQL)
-  - `python-dotenv` (lee `.env`)
+En Linux/macOS, puede requerir librerías del sistema (cairo/pango) para PDF. En Windows suele funcionar sin pasos extra.
 
-- Si añades subida de imágenes con `ImageField`, agrega `Pillow`.
-
-Comandos útiles
-
-- Ejecutar la shell de Django:
+## Comandos útiles
 
 ```cmd
-python manage.py shell
+"%CD%\.venv\Scripts\python.exe" manage.py shell
+"%CD%\.venv\Scripts\python.exe" manage.py test
 ```
 
-```cmd
-python manage.py test
-```
+## Flujo de trabajo
+1. Crea una rama por feature: `git checkout -b feat/mi-cambio`.
+2. Commits pequeños y descriptivos.
+3. Abre PR y solicita revisión.
 
-Buenas prácticas para commits y PRs
-
-1. Crear una rama por feature: `git checkout -b feat/mi-cambio`.
-2. Hacer commits pequeños y con mensajes descriptivos.
-3. Abrir pull request hacia `main` y pedir revisión.
-
-Checklist antes de PR
-
+Checklist antes del PR:
+- Ejecutaste migraciones y probaste los flujos.
+- No subiste `.env` ni secretos.
+- Agregaste tests cuando aplica.
 - Ejecutaste `migrate` y probaste los flujos principales.
-- No subiste `.env` ni datos sensibles.
-- Añadiste tests cuando corresponde.
 
+- No subiste `.env` ni datos sensibles.
 

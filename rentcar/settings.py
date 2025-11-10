@@ -79,7 +79,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'es'
-TIME_ZONE = 'UTC'
+# Ajustar a tu zona horaria local para mostrar horas correctas en plantillas
+# Ejemplo para Paraguay (Asunción): 'America/Asuncion'
+TIME_ZONE = 'America/Asuncion'
 USE_I18N = True
 USE_TZ = True
 

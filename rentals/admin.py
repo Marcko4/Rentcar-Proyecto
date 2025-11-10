@@ -3,6 +3,7 @@ from django.utils.html import format_html
 from django import forms
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
+from django.urls import reverse
 import os
 
 from .models import Vehicle, Reservation
@@ -81,3 +82,28 @@ class ReservationAdmin(admin.ModelAdmin):
     list_filter = ('status',)
     search_fields = ('nombre', 'email', 'telefono')
     date_hierarchy = 'created_at'
+    readonly_fields = ('invoice_actions',)
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                'vehicle', 'user', 'nombre', 'email', 'telefono',
+                'fecha_inicio', 'fecha_fin', 'comentarios', 'status', 'invoice_actions'
+            )
+        }),
+    )
+
+    def invoice_actions(self, obj):
+        if not obj or not obj.id:
+            return "—"
+        try:
+            view_url = reverse('rentals:reservation_invoice', args=[obj.id])
+            pdf_url = reverse('rentals:reservation_invoice_download', args=[obj.id])
+            return format_html(
+                '<a class="button" target="_blank" href="{}" style="margin-right:6px;">Ver comprobante</a>'
+                '<a class="button" href="{}">Descargar PDF</a>',
+                view_url, pdf_url
+            )
+        except Exception:
+            return "—"
+    invoice_actions.short_description = "Comprobante"

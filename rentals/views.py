@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponse
 from django.db.models import Q, Min, Max  # <-- filtros/orden y rangos de precio
+from django.template.loader import get_template
+from io import BytesIO
+from datetime import timedelta
 from .forms import CustomUserCreationForm, LoginForm, RentForm
 from .models import Vehicle, Reservation
 
@@ -107,12 +110,12 @@ def rent_vehicle(request, vehicle_id):
                 email=form.cleaned_data['email'],
                 telefono=form.cleaned_data['telefono'],
                 fecha_inicio=form.cleaned_data['fecha_inicio'],
-                fecha_fin=form.cleaned_data['fecha_fin'],
+                fecha_fin=form.cleaned_data['fecha_inicio'] + timedelta(days=form.cleaned_data['dias']),
                 comentarios=form.cleaned_data['comentarios']
             )
             reservation.save()
-            messages.success(request, f'¡Tu solicitud para rentar el {vehicle.make} {vehicle.model} ha sido enviada!')
-            return redirect('rentals:my_rentals')
+            messages.success(request, f'¡Tu solicitud para rentar el {vehicle.make} {vehicle.model} ha sido enviada! Descargando comprobante...')
+            return redirect('rentals:reservation_invoice_download', reservation.id)
     else:
         initial_data = {
             'nombre': f"{request.user.first_name} {request.user.last_name}".strip() or request.user.username,
@@ -157,3 +160,66 @@ def update_reservation_status(request, reservation_id):
             reservation.save()
             messages.success(request, f'Estado de la reserva actualizado a {reservation.get_status_display()}')
     return redirect('rentals:admin_rentals')
+
+
+# ---------- Comprobante / Factura PDF ----------
+@login_required
+def reservation_invoice(request, reservation_id):
+    # Importación diferida para evitar errores si la librería no está instalada aún
+    try:
+        from xhtml2pdf import pisa  # type: ignore
+    except Exception:
+        pisa = None
+    reservation = get_object_or_404(Reservation, id=reservation_id)
+    if not (request.user.is_superuser or request.user.is_staff or reservation.user == request.user):
+        return HttpResponseForbidden("No tienes permiso para ver este comprobante.")
+
+    days = (reservation.fecha_fin - reservation.fecha_inicio).days
+    days = max(1, days)
+    total = reservation.vehicle.price * days
+
+    context = {
+        'reservation': reservation,
+        'days': days,
+        'total': total,
+    }
+
+    # Modo HTML con botón "Descargar PDF"
+    template = get_template('rentals/invoice.html')
+    html = template.render({**context, 'show_download': True})
+    return HttpResponse(html)
+
+
+@login_required
+def reservation_invoice_download(request, reservation_id):
+    reservation = get_object_or_404(Reservation, id=reservation_id)
+    if not (request.user.is_superuser or request.user.is_staff or reservation.user == request.user):
+        return HttpResponseForbidden("No tienes permiso para descargar este comprobante.")
+
+    days = (reservation.fecha_fin - reservation.fecha_inicio).days
+    days = max(1, days)
+    total = reservation.vehicle.price * days
+
+    context = {
+        'reservation': reservation,
+        'days': days,
+        'total': total,
+    }
+
+    template = get_template('rentals/invoice.html')
+    html = template.render({**context, 'show_download': False})
+
+    try:
+        from xhtml2pdf import pisa  # type: ignore
+    except Exception as e:
+        return HttpResponse(f"No se pudo generar el PDF (librería faltante): {e}", status=500)
+
+    result = BytesIO()
+    pdf_status = pisa.CreatePDF(src=html, dest=result, encoding='utf-8')
+    if pdf_status.err:
+        return HttpResponse("Ocurrió un error al generar el PDF.", status=500)
+
+    response = HttpResponse(result.getvalue(), content_type='application/pdf')
+    filename = f"comprobante_reserva_{reservation.id}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response

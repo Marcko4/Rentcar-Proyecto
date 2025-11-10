@@ -1,5 +1,5 @@
 {% extends 'rentals/base.html' %}
-{% load humanize static %}
+{% load humanize static tz %}
 
 {% block content %}
   <div class="container py-4">
@@ -44,6 +44,18 @@
                   <div class="col-md-3 text-md-end mt-3 mt-md-0">
                     <p class="fs-5 fw-bold mb-0">Gs. {{ reservation.vehicle.price|intcomma }}</p>
                     <small class="text-muted">por día</small>
+                    <div class="mt-3 d-flex gap-2 justify-content-md-end">
+                      <a href="{% url 'rentals:reservation_invoice' reservation.id %}"
+                         class="btn btn-outline-primary btn-lg d-inline-flex align-items-center gap-2 px-4">
+                        <i class="bi bi-file-earmark-text"></i>
+                        Ver comprobante
+                      </a>
+                      <a href="{% url 'rentals:reservation_invoice_download' reservation.id %}"
+                         class="btn btn-primary btn-lg d-inline-flex align-items-center gap-2 px-4">
+                        <i class="bi bi-download"></i>
+                        Descargar PDF
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
