@@ -1,28 +1,54 @@
 {% extends 'rentals/base.html' %}
+{% load static humanize %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-8 col-lg-6">
-      <div class="card shadow-lg border-0 mt-4">
-        <div class="card-body p-4">
-          <h3 class="mb-3">Rentar {{ vehicle.make }} {{ vehicle.model }}</h3>
-          <form method="post" novalidate>
-            {% csrf_token %}
-            {% for field in form.visible_fields %}
-              <div class="mb-3">
-                <label class="form-label">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                  <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
-                {% endif %}
-              </div>
-            {% endfor %}
-            <div class="d-grid mt-3">
-              <button class="btn btn-primary btn-lg" type="submit">Confirmar renta</button>
-            </div>
-          </form>
+  <div class="rent-grid container my-4">
+    <!-- Resumen del vehículo seleccionado -->
+    <aside class="summary-card">
+      <div class="summary-media">
+        {% if vehicle.image %}
+          <img src="{% static 'images/' %}{{ vehicle.image }}" alt="{{ vehicle }}"
+               onerror="this.onerror=null;this.src='{% static 'images/car1.jpg' %}'">
+        {% else %}
+          <img src="{% static 'images/car1.jpg' %}" alt="{{ vehicle }}">
+        {% endif %}
+      </div>
+      <div class="summary-body">
+        <h4 class="summary-title">{{ vehicle.make }} {{ vehicle.model }}</h4>
+        <div class="summary-specs">
+          <span class="spec-chip">Placa: {{ vehicle.plate }}</span>
+          <span class="spec-chip">Año: {{ vehicle.year|default:'-' }}</span>
+          <span class="spec-chip">Estado: {% if vehicle.available %}Disponible{% else %}No disponible{% endif %}</span>
+        </div>
+        <div class="summary-price">
+          <div class="price-large">Gs. {{ vehicle.price|intcomma }} <span class="per">/ día</span></div>
         </div>
       </div>
-    </div>
+    </aside>
+
+    <!-- Formulario de renta -->
+    <section class="rent-form-card">
+      <h3 class="rent-heading">Rentar {{ vehicle.make }} {{ vehicle.model }}</h3>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form.visible_fields %}
+          <div class="mb-3">
+            <label class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <div class="help-text">{{ field.help_text|safe }}</div>
+            {% endif %}
+            {% if field.errors %}
+              <div class="invalid-feedback d-block rounded-3 px-2 py-1 mt-1 error-chip">
+                {{ field.errors|striptags }}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <div class="d-grid mt-3">
+          <button class="btn btn-accent btn-lg" type="submit">Confirmar renta</button>
+        </div>
+      </form>
+    </section>
   </div>
 {% endblock %}

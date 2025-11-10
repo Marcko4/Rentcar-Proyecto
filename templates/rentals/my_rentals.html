@@ -2,62 +2,51 @@
 {% load humanize static %}
 
 {% block content %}
-  <div class="container py-4">
-    <h2 class="mb-4">Mis Rentas</h2>
-    
+  <div class="container myrentals py-4">
+    <div class="myrentals-head d-flex align-items-end justify-content-between mb-3">
+      <div>
+        <h2 class="page-title m-0">Mis rentas</h2>
+        <div class="sub text-muted">{{ reservations|length }} reservas</div>
+      </div>
+      <a class="btn btn-accent" href="{% url 'rentals:home' %}">Nueva renta</a>
+    </div>
+
     {% if reservations %}
-      <div class="row">
+      <div class="rental-list">
         {% for reservation in reservations %}
-          <div class="col-12 mb-4">
-            <div class="card shadow-sm">
-              <div class="card-body">
-                <div class="row align-items-center">
-                  <div class="col-md-2">
-                    {% if reservation.vehicle.image %}
-                      {% with 'images/'|add:reservation.vehicle.image as imgpath %}
-                        <img src="{% static imgpath %}" class="img-fluid rounded" alt="{{ reservation.vehicle }}">
-                      {% endwith %}
-                    {% endif %}
-
-
-                  </div>
-                  <div class="col-md-7">
-                    <h5 class="card-title mb-1">{{ reservation.vehicle.make }} {{ reservation.vehicle.model }}</h5>
-                    <p class="text-muted mb-2">Placa: {{ reservation.vehicle.plate }}</p>
-                    <div class="d-flex flex-wrap gap-3">
-                      <div>
-                        <small class="text-muted d-block">Fecha de inicio</small>
-                        <strong>{{ reservation.fecha_inicio }}</strong>
-                      </div>
-                      <div>
-                        <small class="text-muted d-block">Fecha de fin</small>
-                        <strong>{{ reservation.fecha_fin }}</strong>
-                      </div>
-                      <div>
-                        <small class="text-muted d-block">Estado</small>
-                        <span class="badge {% if reservation.status == 'CONFIRMADA' %}bg-success{% elif reservation.status == 'PENDIENTE' %}bg-warning{% elif reservation.status == 'CANCELADA' %}bg-danger{% else %}bg-info{% endif %}">
-                          {{ reservation.get_status_display }}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-3 text-md-end mt-3 mt-md-0">
-                    <p class="fs-5 fw-bold mb-0">Gs. {{ reservation.vehicle.price|intcomma }}</p>
-                    <small class="text-muted">por día</small>
-                  </div>
-                </div>
+          <article class="rental-item">
+            <div class="ri-media">
+              {% if reservation.vehicle.image %}
+                {% with 'images/'|add:reservation.vehicle.image as imgpath %}
+                  <img src="{% static imgpath %}" alt="{{ reservation.vehicle }}" onerror="this.onerror=null;this.src='{% static 'images/car1.jpg' %}'">
+                {% endwith %}
+              {% else %}
+                <img src="{% static 'images/car1.jpg' %}" alt="{{ reservation.vehicle }}">
+              {% endif %}
+            </div>
+            <div class="ri-main">
+              <div class="ri-title">{{ reservation.vehicle.make }} {{ reservation.vehicle.model }} <span class="ri-plate">• {{ reservation.vehicle.plate }}</span></div>
+              <div class="ri-meta">
+                <span class="ri-chip"><i class="bi bi-calendar-event me-1"></i>{{ reservation.fecha_inicio }}</span>
+                <span class="ri-chip"><i class="bi bi-calendar-check me-1"></i>{{ reservation.fecha_fin }}</span>
+                <span class="ri-chip status-pill status-{{ reservation.status|lower }}">{{ reservation.get_status_display }}</span>
               </div>
             </div>
-          </div>
+            <div class="ri-price text-end">
+              <div class="ri-price-main">Gs. {{ reservation.vehicle.price|intcomma }} <span class="per">/ día</span></div>
+              <a class="btn btn-outline-light btn-sm mt-2" href="{% url 'rentals:rent_vehicle' reservation.vehicle.id %}">Rentar de nuevo</a>
+            </div>
+          </article>
         {% endfor %}
       </div>
     {% else %}
-      <div class="text-center py-5">
-        <i class="bi bi-calendar-x display-1 text-muted mb-3"></i>
-        <h4>No tienes rentas aún</h4>
-        <p class="text-muted">Explora nuestro catálogo y renta tu primer vehículo.</p>
-        <a href="{% url 'rentals:home' %}" class="btn btn-primary">Ver catálogo</a>
+      <div class="empty-state mt-4 text-center">
+        <div class="mb-3"><i class="bi bi-calendar-x display-6"></i></div>
+        <h5 class="mb-1">Aún no tienes rentas</h5>
+        <p class="text-muted mb-3">Explora el catálogo y elige tu vehículo ideal.</p>
+        <a href="{% url 'rentals:home' %}" class="btn btn-accent">Ver catálogo</a>
       </div>
     {% endif %}
   </div>
 {% endblock %}
+
