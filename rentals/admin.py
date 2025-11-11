@@ -3,6 +3,7 @@ from django.utils.html import format_html
 from django import forms
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
+from django.urls import reverse
 import os
 
 from .models import Vehicle, Reservation
@@ -22,6 +23,7 @@ def _scan_vehicle_images():
                     rel_to_images = os.path.relpath(abs_path, images_root).replace('\\', '/')
                     results.add(rel_to_images)
 
+    # Escanear en la app rentals/static/images
     app_images_root = os.path.join(settings.BASE_DIR, 'rentals', 'static', 'images')
     app_vehicles_dir = os.path.join(app_images_root, 'vehicles')
     if os.path.isdir(app_vehicles_dir):
@@ -72,6 +74,7 @@ class VehicleAdmin(admin.ModelAdmin):
             except Exception:
                 return f"No se pudo resolver: images/{obj.image}"
         return "Sin imagen"
+
     image_preview.short_description = "Vista previa"
 
 
@@ -81,3 +84,35 @@ class ReservationAdmin(admin.ModelAdmin):
     list_filter = ('status',)
     search_fields = ('nombre', 'email', 'telefono')
     date_hierarchy = 'created_at'
+    readonly_fields = ('invoice_actions',)
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                'vehicle', 'user', 'nombre', 'email', 'telefono',
+                'fecha_inicio', 'fecha_fin', 'comentarios', 'status', 'invoice_actions'
+            )
+        }),
+    )
+
+    def invoice_actions(self, obj):
+        """
+        Muestra acciones para ver/descargar el comprobante de la reserva.
+        Requiere que existan las rutas con nombres:
+          - 'rentals:reservation_invoice'            -> /reservations/<id>/invoice/
+          - 'rentals:reservation_invoice_download'  -> /reservations/<id>/invoice/download/
+        """
+        if not obj or not getattr(obj, 'id', None):
+            return "—"
+        try:
+            view_url = reverse('rentals:reservation_invoice', args=[obj.id])
+            pdf_url = reverse('rentals:reservation_invoice_download', args=[obj.id])
+            return format_html(
+                '<a class="button" target="_blank" href="{}" style="margin-right:6px;">Ver comprobante</a>'
+                '<a class="button" href="{}">Descargar PDF</a>',
+                view_url, pdf_url
+            )
+        except Exception:
+            return "—"
+
+    invoice_actions.short_description = "Comprobante"

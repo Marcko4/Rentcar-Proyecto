@@ -1,5 +1,5 @@
 {% extends 'rentals/base.html' %}
-{% load humanize static %}
+{% load humanize static tz %}
 
 {% block content %}
   <div class="container myrentals py-4">
@@ -24,17 +24,30 @@
                 <img src="{% static 'images/car1.jpg' %}" alt="{{ reservation.vehicle }}">
               {% endif %}
             </div>
+
             <div class="ri-main">
-              <div class="ri-title">{{ reservation.vehicle.make }} {{ reservation.vehicle.model }} <span class="ri-plate">• {{ reservation.vehicle.plate }}</span></div>
+              <div class="ri-title">
+                {{ reservation.vehicle.make }} {{ reservation.vehicle.model }}
+                <span class="ri-plate">• {{ reservation.vehicle.plate }}</span>
+              </div>
               <div class="ri-meta">
                 <span class="ri-chip"><i class="bi bi-calendar-event me-1"></i>{{ reservation.fecha_inicio }}</span>
                 <span class="ri-chip"><i class="bi bi-calendar-check me-1"></i>{{ reservation.fecha_fin }}</span>
                 <span class="ri-chip status-pill status-{{ reservation.status|lower }}">{{ reservation.get_status_display }}</span>
               </div>
             </div>
+
             <div class="ri-price text-end">
               <div class="ri-price-main">Gs. {{ reservation.vehicle.price|intcomma }} <span class="per">/ día</span></div>
-              <a class="btn btn-outline-light btn-sm mt-2" href="{% url 'rentals:rent_vehicle' reservation.vehicle.id %}">Rentar de nuevo</a>
+              <div class="d-flex flex-column gap-2 mt-2">
+                <a class="btn btn-outline-light btn-sm" href="{% url 'rentals:rent_vehicle' reservation.vehicle.id %}">Rentar de nuevo</a>
+                <a href="{% url 'rentals:reservation_invoice' reservation.id %}" class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center justify-content-center gap-1">
+                  <i class="bi bi-file-earmark-text"></i><span>Ver comprobante</span>
+                </a>
+                <a href="{% url 'rentals:reservation_invoice_download' reservation.id %}" class="btn btn-primary btn-sm d-inline-flex align-items-center justify-content-center gap-1">
+                  <i class="bi bi-download"></i><span>Descargar PDF</span>
+                </a>
+              </div>
             </div>
           </article>
         {% endfor %}
@@ -49,4 +62,3 @@
     {% endif %}
   </div>
 {% endblock %}
-

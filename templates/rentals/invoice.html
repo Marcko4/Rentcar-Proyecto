@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+  {% load humanize tz %}
+<head>
+  <meta charset="utf-8" />
+  <title>Comprobante de Renta</title>
+  <style>
+    body { font-family: DejaVu Sans, Arial, sans-serif; font-size: 12px; color: #212529; }
+    .container { width: 90%; margin: 0 auto; }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0d6efd; padding-bottom: 10px; margin-bottom: 16px; }
+    .brand { font-size: 22px; font-weight: 700; color: #0d6efd; }
+    .meta { text-align: right; font-size: 12px; }
+    .actions { margin: 10px 0 18px 0; }
+    .btn { display: inline-block; padding: 8px 14px; border-radius: 6px; text-decoration: none; font-weight: 600; }
+    .btn-primary { background: #0d6efd; color: #fff; }
+    .btn-primary:hover { background: #0b5ed7; }
+    .section { margin-bottom: 14px; }
+    .title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #dee2e6; padding: 8px; }
+    th { background: #f8f9fa; text-align: left; }
+    .totals td { border: none; }
+    .right { text-align: right; }
+    .small { color: #6c757d; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    {% if show_download %}
+    <div class="actions">
+      <a class="btn btn-primary" href="{% url 'rentals:reservation_invoice_download' reservation.id %}">Descargar PDF</a>
+    </div>
+    {% endif %}
+    <div class="header">
+      <div class="brand">Rentcar</div>
+      <div class="meta">
+        <div><strong>Comprobante</strong> #{{ reservation.id }}</div>
+  <div>Fecha: {{ reservation.created_at|localtime|date:"d/m/Y H:i" }}</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="title">Cliente</div>
+      <div>{{ reservation.nombre }}</div>
+      <div class="small">{{ reservation.email }} | {{ reservation.telefono }}</div>
+    </div>
+
+    <div class="section">
+      <div class="title">Detalles de la renta</div>
+      <table>
+        <tr>
+          <th>Vehículo</th>
+          <th>Período</th>
+          <th class="right">Días</th>
+          <th class="right">Precio por día</th>
+          <th class="right">Total</th>
+        </tr>
+        <tr>
+          <td>{{ reservation.vehicle.make }} {{ reservation.vehicle.model }} ({{ reservation.vehicle.plate }})</td>
+          <td>Del {{ reservation.fecha_inicio|date:"d/m/Y" }} al {{ reservation.fecha_fin|date:"d/m/Y" }}</td>
+          <td class="right">{{ days }}</td>
+          <td class="right">Gs. {{ reservation.vehicle.price|intcomma }}</td>
+          <td class="right">Gs. {{ total|intcomma }}</td>
+        </tr>
+      </table>
+    </div>
+
+    {% if reservation.comentarios %}
+    <div class="section">
+      <div class="title">Comentarios</div>
+      <div>{{ reservation.comentarios }}</div>
+    </div>
+    {% endif %}
+
+    <div class="section small">
+      Este comprobante es generado automáticamente por el sistema. Conservar para control y seguimiento.
+    </div>
+  </div>
+</body>
+</html>

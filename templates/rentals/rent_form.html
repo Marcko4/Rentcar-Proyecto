@@ -51,4 +51,34 @@
       </form>
     </section>
   </div>
+
+  {% block extra_scripts %}
+  <script>
+    (function () {
+      const start = document.getElementById('id_fecha_inicio');
+      const end = document.getElementById('id_fecha_fin');
+      const days = document.getElementById('id_dias');
+
+      function recalc() {
+        if (!start || !end || !days) return;
+        const sv = start.value, ev = end.value;
+        if (!sv || !ev) return;
+
+        const s = new Date(sv + 'T00:00:00');
+        const e = new Date(ev + 'T00:00:00');
+        if (isNaN(s) || isNaN(e) || e < s) return;
+
+        const MS = 24 * 60 * 60 * 1000;
+        const d = Math.max(1, Math.round((e - s) / MS));
+        days.value = d; // solo actualiza el valor; el backend recalcula igualmente
+      }
+
+      ['change', 'input'].forEach(evt => {
+        if (start) start.addEventListener(evt, recalc);
+        if (end) end.addEventListener(evt, recalc);
+      });
+      recalc();
+    })();
+  </script>
+  {% endblock %}
 {% endblock %}
