@@ -1,20 +1,26 @@
-/* Variables de color */
+
 :root {
-  --primary: #0066ff;
+  --primary: #2563eb;          
+  --primary-strong: #1d4ed8;
   --secondary: #ff7043;
-  --muted: #6c757d;
-  --light-bg: #f8f9fa;
-  --dark-bg: #212529;
-  --border-radius: 12px;
+  --muted: #9ca3af;            
+  --light-bg: #0b0f16;          
+  --dark-bg: #0a0c10;           
+  --panel: #0d1117;             
+  --panel-border: #1f2937;      
+  --border-radius: 14px;
+  --shadow-1: 0 6px 24px rgba(0, 0, 0, .35);
+  --shadow-2: 0 16px 60px rgba(0, 0, 0, .5);
+  --glow: 0 0 0 1px rgba(37, 99, 235, .18), 0 10px 30px rgba(37, 99, 235, .12);
 }
 
-/* Estilos globales */
+
 html, body {
-  height: 100%;
+  min-height: 100%;
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  background: linear-gradient(180deg, #f4f8ff 0%, #ffffff 100%);
-  color: var(--dark-bg);
+  background: var(--light-bg);
+  color: #e5e7eb;
   font-size: 1rem;
 }
 
@@ -23,11 +29,11 @@ a {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1400px; 
   margin: auto;
 }
 
-/* Navbar */
+
 .navbar {
   border-bottom: 2px solid var(--muted);
 }
@@ -50,7 +56,7 @@ a {
   transition: background-color 0.3s ease-in-out;
 }
 
-/* Estilo para el botón de "Cerrar sesión" */
+
 .navbar-nav .nav-item form button {
   font-weight: 600;
   font-size: 1rem;
@@ -68,7 +74,7 @@ a {
   border-color: #004085;
 }
 
-/* Estilos de botones */
+
 .btn-primary {
   background: var(--primary);
   border: none;
@@ -95,7 +101,7 @@ a {
 }
 
 
-/* Barra de filtros */
+
 form.bg-white.border.rounded-3.p-3.shadow-sm {
   background-color: #f8f9fa;
   border: 1px solid #ddd;
@@ -108,7 +114,7 @@ form.bg-white.border.rounded-3.p-3.shadow-sm {
   justify-content: space-between;
 }
 
-/* Campos de filtro */
+
 .form-control, .form-select {
   font-size: 1rem;       
   padding: 1rem;         
@@ -119,7 +125,7 @@ form.bg-white.border.rounded-3.p-3.shadow-sm {
   background-color: #fff;     
 }
 
-/* Botones de filtro */
+
 button[type="submit"], .btn-outline-secondary {
   font-size: 1rem;          
   padding: 1rem 2rem;       
@@ -149,7 +155,7 @@ button[type="submit"]:hover, .btn-outline-secondary:hover {
 }
 
 
-/* Botones de filtro */
+
 button[type="submit"], .btn-outline-secondary {
   font-size: 1rem;
   padding: 1rem 2rem;         
@@ -166,7 +172,7 @@ button[type="submit"]:hover, .btn-outline-secondary:hover {
   border-color: #0056b3;
 }
 
-/* Etiquetas */
+
 .form-label {
   font-weight: 600;
   font-size: 1rem;
@@ -186,7 +192,7 @@ button[type="submit"]:hover, .btn-outline-secondary:hover {
   padding-right: 1rem;
 }
 
-/* Asegurar que las imágenes dentro de las tarjetas tengan el mismo tamaño */
+
 .card-img-top {
   width: 100%;
   height: 200px;
@@ -194,7 +200,7 @@ button[type="submit"]:hover, .btn-outline-secondary:hover {
   object-position: center;
 }
 
-/* Ajuste de las tarjetas para mantener la consistencia en su diseño */
+
 .card {
   border-radius: var(--border-radius);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
@@ -214,7 +220,7 @@ button[type="submit"]:hover, .btn-outline-secondary:hover {
   color: var(--muted);
 }
 
-/* Efecto de hover en las tarjetas */
+
 .card:hover {
   box-shadow: 0 8px 40px rgba(0, 102, 255, 0.2);
   transform: translateY(-5px);
@@ -281,4 +287,253 @@ button[type="submit"]:hover, .btn-outline-secondary:hover {
   background-color: #0056b3; 
   color: white; 
   transform: scale(1.05); 
+}
+
+
+
+body.theme-dark {
+  height: auto;
+  min-height: 100%;
+  background: radial-gradient(1200px 600px at 20% -10%, #0d1422 0%, #0b101c 45%, var(--light-bg) 100%) fixed;
+  color: #e5e7eb;
+  position: relative;
+}
+body.theme-dark::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(1200px 600px at 80% -10%, rgba(29,78,216,.22), rgba(0,0,0,0) 55%),
+              radial-gradient(800px 400px at 10% 110%, rgba(2,132,199,.18), rgba(0,0,0,0) 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.custom-navbar {
+  background: rgba(11, 15, 22, 0.65) !important;
+  backdrop-filter: saturate(160%) blur(10px);
+  -webkit-backdrop-filter: saturate(160%) blur(10px);
+  border-bottom: 1px solid rgba(31,41,55,.7);
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  position: sticky; top: 0; z-index: 20;
+  min-height: 64px;
+}
+
+.page-title {
+  color: #e5e7eb;
+  font-weight: 700;
+}
+
+
+.nav-tesla .navbar-nav .nav-link { color:#e5e7eb; opacity:.9; font-weight:600; padding:.25rem .75rem; }
+.nav-tesla .navbar-nav .nav-link:hover { opacity:1; }
+.brand-tesla { color:#f9fafb !important; letter-spacing:.04em; font-weight:800; }
+.nav-hello { color:#cbd5e1 !important; font-weight:600; }
+.nav-logout.btn-ghost {
+  color:#e5e7eb; border:1px solid #334155; background: transparent; border-radius: 10px; padding:.45rem .9rem;
+}
+.nav-logout.btn-ghost:hover { background:#121826; border-color:#2563eb; color:#fff; box-shadow: var(--glow); }
+
+
+.filter-card {
+  background: rgba(13, 17, 23, .75);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--shadow-1);
+  backdrop-filter: blur(8px);
+}
+
+
+.filter-card .btn-primary,
+.filter-card .btn-outline-light {
+  background: transparent;
+  color: #e5e7eb;
+  border: 1px solid #334155;
+  box-shadow: var(--shadow-1);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 42px;
+  line-height: 1.2;
+  font-weight: 600;
+  padding: 0.6rem 1rem; 
+  font-size: 0.95rem;
+  min-width: 0;
+}
+.filter-card .btn-primary:hover,
+.filter-card .btn-outline-light:hover {
+  background: #121826;
+  border-color: var(--primary);
+  color: #ffffff;
+  box-shadow: var(--glow);
+}
+
+
+.actions-grid {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  gap: .75rem;
+  width: 100%;
+}
+.actions-grid .btn { width: auto; min-width: 120px; }
+.actions-grid > span { display: none; } 
+
+.filter-card .form-control,
+.filter-card .form-select {
+  background: #0b0f16;
+  border-color: #1f2937;
+  color: #e5e7eb;
+}
+.filter-card .form-control::placeholder { color: #9ca3af; }
+.filter-card .form-control:focus,
+.filter-card .form-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 0.25rem rgba(37,99,235,.15);
+}
+.btn-filter {
+  background: #0b0f16;
+  color: #e5e7eb;
+  border: 1px solid #1f2937;
+  text-align: left;
+  transition: background .2s ease, box-shadow .2s ease;
+}
+.btn-filter:hover { background: #121826; box-shadow: 0 0 0 1px #1f2937 inset; }
+
+.vehicle-card {
+  background: linear-gradient(180deg, #0f141d 0%, #0e131b 100%);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-1);
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.vehicle-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-2), var(--glow);
+}
+.vehicle-media {
+  background: radial-gradient(600px 220px at 50% 10%, #0f131b 0%, #0b0f16 60%, #0b0f16 100%);
+}
+.vehicle-media img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.vehicle-body { padding: 1rem 1rem 1.25rem; }
+.vehicle-title { color: #f9fafb; font-weight: 700; font-size: 1.05rem; letter-spacing: .2px; }
+.bg-secondary-soft { background: #1f2937; color: #cbd5e1; border: 1px solid #374151; }
+.vehicle-tags .tag {
+  display: inline-block;
+  font-size: .7rem;
+  letter-spacing: .02em;
+  color: #cbd5e1;
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 999px;
+  padding: .25rem .5rem;
+  margin-right: .35rem;
+}
+.vehicle-price .price-main { font-weight: 800; color: #f3f4f6; }
+.vehicle-price .price-main .per { color: #9ca3af; font-weight: 600; font-size: .9rem; }
+
+.btn-accent {
+  background: linear-gradient(180deg, var(--primary) 0%, var(--primary-strong) 100%);
+  color: #fff;
+  border: 1px solid var(--primary-strong);
+  box-shadow: 0 6px 20px rgba(29,78,216,.25);
+}
+.btn-accent:hover { background: var(--primary-strong); box-shadow: 0 10px 28px rgba(29,78,216,.35), 0 0 0 1px rgba(29,78,216,.25) inset; }
+
+.sort-select {
+  background: #0b0f16; color: #e5e7eb; border-color: #1f2937;
+  box-shadow: var(--shadow-1);
+}
+
+.empty-state {
+  background: rgba(17, 24, 39, .8);
+  border: 1px dashed #334155;
+  color: #cbd5e1;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: var(--shadow-1);
+}
+
+
+.rent-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+@media (min-width: 992px) {
+  .rent-grid { grid-template-columns: 1fr 1.4fr; }
+}
+
+.summary-card {
+  background: linear-gradient(180deg, #0f141d 0%, #0e131b 100%);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-1);
+}
+.summary-media { background: radial-gradient(600px 220px at 50% 10%, #0f131b 0%, #0b0f16 60%, #0b0f16 100%); }
+.summary-media img { width: 100%; height: 260px; object-fit: cover; display: block; }
+.summary-body { padding: 1rem 1.2rem 1.25rem; }
+.summary-title { color: #f9fafb; font-weight: 800; margin-bottom: .5rem; }
+.summary-specs { margin-bottom: .75rem; }
+.spec-chip { display: inline-block; color:#cbd5e1; background:#111827; border:1px solid #374151; border-radius:999px; padding:.25rem .6rem; margin:.15rem .25rem .15rem 0; font-size:.8rem; }
+.summary-price .price-large { font-weight: 800; color:#f3f4f6; font-size:1.25rem; }
+.summary-price .per { color:#9ca3af; font-weight:600; font-size:.9rem; }
+
+.rent-form-card {
+  background: rgba(13, 17, 23, .85);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-1);
+  padding: 1.25rem;
+}
+.rent-heading { color:#e5e7eb; font-weight: 700; margin-bottom: .75rem; }
+.rent-form-card .form-label { color:#cbd5e1; font-weight:600; }
+.rent-form-card input,
+.rent-form-card select,
+.rent-form-card textarea {
+  width: 100%;
+  background:#0b0f16; color:#e5e7eb; border:1px solid #1f2937; border-radius:12px; padding:.75rem .9rem;
+}
+.rent-form-card input:focus,
+.rent-form-card select:focus,
+.rent-form-card textarea:focus { border-color:#2563eb; box-shadow:0 0 0 0.25rem rgba(37,99,235,.15); outline:none; }
+
+.myrentals .myrentals-head .sub { color:#94a3b8; font-size:.95rem; }
+.rental-list { display: flex; flex-direction: column; gap: .85rem; }
+.rental-item {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  background: linear-gradient(180deg, #0f141d 0%, #0e131b 100%);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: .75rem .9rem;
+  box-shadow: var(--shadow-1);
+  transition: transform .15s ease, box-shadow .2s ease;
+}
+.rental-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); }
+.ri-media img { width: 120px; height: 80px; object-fit: cover; border-radius: 10px; display:block; }
+.ri-title { color:#f3f4f6; font-weight: 700; }
+.ri-plate { color:#9ca3af; font-weight:600; font-size:.9rem; }
+.ri-meta { margin-top:.35rem; display:flex; flex-wrap:wrap; gap:.4rem; }
+.ri-chip { background:#111827; color:#cbd5e1; border:1px solid #374151; border-radius:999px; padding:.25rem .55rem; font-size:.8rem; }
+.ri-price-main { color:#f8fafc; font-weight:800; }
+.ri-price-main .per { color:#94a3b8; font-weight:600; font-size:.9rem; }
+.status-pill { border-color:#374151; }
+.status-p { background:#0b3d1f; color:#86efac; border:1px solid #065f46; }
+.status-c { background:#102a43; color:#93c5fd; border:1px solid #1d4ed8; } 
+.status-x { background:#3b0d0d; color:#fecaca; border:1px solid #b91c1c; } 
+@media (max-width: 575px) {
+  .rental-item { grid-template-columns: 100px 1fr; }
+  .ri-price { grid-column: 1 / -1; }
 }

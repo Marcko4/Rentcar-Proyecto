@@ -15,4 +15,6 @@ urlpatterns = [
     path('my-rentals/', views.my_rentals, name='my_rentals'),
     path('admin/rentals/', views.admin_rentals, name='admin_rentals'),
     path('admin/rentals/<int:reservation_id>/update-status/', views.update_reservation_status, name='update_reservation_status'),
+    path('reservations/<int:reservation_id>/invoice/', views.reservation_invoice, name='reservation_invoice'),
+    path('reservations/<int:reservation_id>/invoice/download/', views.reservation_invoice_download, name='reservation_invoice_download'),
 ]

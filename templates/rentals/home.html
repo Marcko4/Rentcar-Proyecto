@@ -1,120 +1,118 @@
 {% extends 'rentals/base.html' %}
-{% load humanize static %}
+{% load static humanize %}
 
 {% block content %}
-  <h2 class="mb-4">Catálogo de Vehículos</h2>
-
-  <!-- Barra de filtros -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div class="d-flex flex-wrap gap-2" id="applied-filters">
-      {% if filters.q %}
-        <span class="badge bg-light text-dark">{{ filters.q }}</span>
-      {% endif %}
-      {% if filters.type %}
-        <span class="badge bg-light text-dark">{{ filters.type }}</span>
-      {% endif %}
-      {% if filters.year %}
-        <span class="badge bg-light text-dark">{{ filters.year }}</span>
-      {% endif %}
-      {% if filters.min_price %}
-        <span class="badge bg-light text-dark">{{ filters.min_price }} Gs.</span>
-      {% endif %}
-      {% if filters.max_price %}
-        <span class="badge bg-light text-dark">{{ filters.max_price }} Gs.</span>
-      {% endif %}
-    </div>
-    <button class="btn btn-outline-secondary btn-sm" id="toggle-filters">
-      <i class="bi bi-funnel"></i> Mostrar filtros
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <button id="toggle-filters" class="btn btn-outline-light btn-sm d-lg-none">
+      Mostrar filtros
     </button>
-  </div>
-
-  <div class="filters-container mb-4" id="filters-container" style="display: none;">
-    <form method="get" class="bg-white border rounded-3 p-3 shadow-sm d-flex flex-wrap gap-3">
-      <div class="col-md-3">
-        <label class="form-label">Buscar</label>
-        <input type="text" name="q" value="{{ filters.q }}" class="form-control form-control-sm" placeholder="Marca, modelo o placa">
-      </div>
-
-      <div class="col-md-2">
-        <label class="form-label">Tipo</label>
-        <select name="type" class="form-select form-select-sm">
-          <option value="">Todos</option>
-          {% for value,label in categories %}
-            <option value="{{ value }}" {% if filters.type == value %}selected{% endif %}>{{ label }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-md-2">
-        <label class="form-label">Año</label>
-        <select name="year" class="form-select form-select-sm">
-          <option value="">Todos</option>
-          {% for y in years %}
-            <option value="{{ y }}" {% if filters.year == y %}selected{% endif %}>{{ y }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-md-2">
-        <label class="form-label">Precio mín</label>
-        <input type="number" name="min_price" value="{{ filters.min_price }}" class="form-control form-control-sm" min="0" placeholder="10,000">
-      </div>
-
-      <div class="col-md-2">
-        <label class="form-label">Precio máx</label>
-        <input type="number" name="max_price" value="{{ filters.max_price }}" class="form-control form-control-sm" min="0" placeholder="400,000">
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label">Ordenar por</label>
-        <select name="sort" class="form-select form-select-sm">
-          <option value="">Relevancia</option>
-          <option value="price_asc" {% if filters.sort == 'price_asc' %}selected{% endif %}>Precio: menor a mayor</option>
-          <option value="price_desc" {% if filters.sort == 'price_desc' %}selected{% endif %}>Precio: mayor a menor</option>
-          <option value="year_desc" {% if filters.sort == 'year_desc' %}selected{% endif %}>Año: más nuevo</option>
-          <option value="year_asc" {% if filters.sort == 'year_asc' %}selected{% endif %}>Año: más viejo</option>
-        </select>
-      </div>
-
-      <div class="col-6 col-md-2">
-        <button class="btn btn-primary btn-sm" type="submit"><i class="bi bi-search"></i> Buscar</button>
-      </div>
-
-      <div class="col-6 col-md-2">
-        <a href="{% url 'rentals:home' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x-circle"></i> Limpiar</a>
-      </div>
+    <h2 class="page-title m-0">Elige tu vehículo</h2>
+    <form method="get" class="d-none d-lg-flex gap-2 align-items-center">
+      <input type="hidden" name="q" value="{{ filters.q }}">
+      <input type="hidden" name="min_price" value="{{ filters.min_price }}">
+      <input type="hidden" name="max_price" value="{{ filters.max_price }}">
+      <input type="hidden" name="year" value="{{ filters.year }}">
+      <select class="form-select form-select-sm sort-select" name="sort" onchange="this.form.submit()">
+        <option value="" {% if not filters.sort %}selected{% endif %}>Ordenar</option>
+        <option value="most" disabled>Más popular primero</option>
+        <option value="price_asc" {% if filters.sort == 'price_asc' %}selected{% endif %}>Precio: menor a mayor</option>
+        <option value="price_desc" {% if filters.sort == 'price_desc' %}selected{% endif %}>Precio: mayor a menor</option>
+        <option value="year_desc" {% if filters.sort == 'year_desc' %}selected{% endif %}>Año: más nuevo</option>
+        <option value="year_asc" {% if filters.sort == 'year_asc' %}selected{% endif %}>Año: más antiguo</option>
+        <option value="newest" {% if filters.sort == 'newest' %}selected{% endif %}>Recientes</option>
+      </select>
     </form>
   </div>
 
-  {% if vehicles %}
-    <p class="text-muted mb-3">{{ vehicles|length }} resultado{{ vehicles|length|pluralize:"s" }}</p>
-  {% endif %}
-
   <div class="row g-4">
-    {% for v in vehicles %}
-      <div class="col-12 col-sm-6 col-lg-4">
-        <div class="card car-card h-100">
-          {% if v.image %}
-            {% with 'images/'|add:v.image as imgpath %}
-              <img src="{% static imgpath %}" class="card-img-top" alt="{{ v }}"/>
-            {% endwith %}
-          {% else %}
-            <img src="{% static 'images/car1.svg' %}" class="card-img-top" alt="{{ v }}"/>
-          {% endif %}
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">{{ v.make }} {{ v.model }}</h5>
-            {% if v.category %}
-              {% if v.category %}<span class="badge mb-2" style="background-color:#adb5bd; color:#212529;">{{ v.get_category_display }}</span>{% endif %}
-            {% endif %}
-            <p class="card-text text-muted mb-1">Año: {{ v.year }}</p>
-            <p class="card-text mb-2">Placa: {{ v.plate }}</p>
-            <p class="mt-auto fw-bold">Gs. {{ v.price|intcomma }}</p>
-            <a href="{% url 'rentals:rent_vehicle' v.id %}" class="btn btn-rent mt-3">Rentar</a>
+    <!-- Sidebar filtros -->
+    <aside id="filters-container" class="col-12 col-lg-3">
+      <div class="filter-card p-3 rounded-3">
+        <form method="get" class="filter-form">
+          <div class="mb-3">
+            <label class="form-label text-uppercase small text-muted">Buscar</label>
+            <input type="text" class="form-control form-control-sm" name="q" placeholder="Marca, modelo o placa" value="{{ filters.q }}">
           </div>
-        </div>
+
+          <div class="mb-4">
+            <label class="form-label text-uppercase small text-muted d-block">Rango de precio</label>
+            <div class="btn-group-vertical w-100" role="group">
+              <button type="button" class="btn btn-filter" data-min="0" data-max="50000">0 - 50.000</button>
+              <button type="button" class="btn btn-filter" data-min="50000" data-max="150000">50.000 - 150.000</button>
+              <button type="button" class="btn btn-filter" data-min="150000" data-max="300000">150.000 - 300.000</button>
+              <button type="button" class="btn btn-filter" data-min="300000" data-max="">300.000+</button>
+            </div>
+            <div class="d-flex gap-2 mt-2">
+              <input type="number" class="form-control form-control-sm" name="min_price" placeholder="Mín" value="{{ filters.min_price }}">
+              <input type="number" class="form-control form-control-sm" name="max_price" placeholder="Máx" value="{{ filters.max_price }}">
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label text-uppercase small text-muted">Año</label>
+            <select class="form-select form-select-sm" name="year">
+              <option value="">Todos</option>
+              {% for y in years %}
+                <option value="{{ y }}" {% if filters.year|default:'' == y|stringformat:'s' %}selected{% endif %}>{{ y }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="actions-grid">
+            <button type="submit" class="btn btn-primary">Aplicar</button>
+            <a href="{% url 'rentals:home' %}" class="btn btn-outline-light">Limpiar</a>
+            <span></span>
+          </div>
+        </form>
       </div>
-    {% empty %}
-      <div class="col-12">No hay vehículos que coincidan con el filtro.</div>
-    {% endfor %}
+    </aside>
+
+    <!-- Grid de vehículos -->
+    <section class="col-12 col-lg-9">
+      <div class="row g-4">
+        {% for v in vehicles %}
+          <div class="col-12 col-md-6 col-xl-4">
+            <div class="vehicle-card h-100">
+              <div class="vehicle-media">
+                {% if v.image %}
+                  <img src="{% static 'images/' %}{{ v.image }}" alt="{{ v }}"
+                       onerror="this.onerror=null;this.src='{% static ';images/car1.jpg;' %}'">
+                {% else %}
+                  <img src="{% static 'images/car1.jpg' %}" alt="{{ v }}">
+                {% endif %}
+              </div>
+              <div class="vehicle-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h5 class="vehicle-title">{{ v.make }} {{ v.model }}</h5>
+                  <span class="badge bg-secondary-soft">{{ v.year|default:'-' }}</span>
+                </div>
+                <div class="vehicle-price">
+                  <div class="price-main">Gs. {{ v.price|intcomma }} <span class="per">/ día</span></div>
+                  <div class="price-sub text-muted">Placa: {{ v.plate }}</div>
+                </div>
+                <a href="{% url 'rentals:rent_vehicle' v.id %}" class="btn btn-accent w-100 mt-3">Rentar</a>
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="col-12"><div class="empty-state">No hay vehículos disponibles.</div></div>
+        {% endfor %}
+      </div>
+    </section>
   </div>
+
+  {% block extra_scripts %}
+  <script>
+    // Rellenar min/max desde los botones de rango
+    document.querySelectorAll('.btn-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const form = btn.closest('form');
+        const min = form.querySelector('input[name="min_price"]');
+        const max = form.querySelector('input[name="max_price"]');
+        min.value = btn.dataset.min || '';
+        max.value = btn.dataset.max || '';
+      });
+    });
+  </script>
+  {% endblock %}
 {% endblock %}

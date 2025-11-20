@@ -1,5 +1,5 @@
 {% extends 'rentals/base.html' %}
-{% load humanize static %}
+{% load humanize static tz %}
 
 {% block content %}
   <div class="container py-4">
@@ -26,8 +26,6 @@
                         <img src="{% static imgpath %}" class="img-fluid rounded" alt="{{ reservation.vehicle }}">
                       {% endwith %}
                     {% endif %}
-
-
                   </div>
                   <div class="col-md-6">
                     <h5 class="card-title mb-1">{{ reservation.vehicle.make }} {{ reservation.vehicle.model }}</h5>
@@ -54,7 +52,11 @@
                     <span class="badge {% if reservation.status == 'CONFIRMADA' %}bg-success{% elif reservation.status == 'PENDIENTE' %}bg-warning{% elif reservation.status == 'CANCELADA' %}bg-danger{% else %}bg-info{% endif %} d-block mb-2">
                       {{ reservation.get_status_display }}
                     </span>
-                    <small class="text-muted">Creada: {{ reservation.created_at|date:"d/m/Y H:i" }}</small>
+                    <small class="text-muted">Creada: {{ reservation.created_at|localtime|date:"d/m/Y H:i" }}</small>
+                    <div class="mt-2 d-flex flex-column gap-2">
+                      <a href="{% url 'rentals:reservation_invoice' reservation.id %}" class="btn btn-sm btn-outline-secondary">Ver</a>
+                      <a href="{% url 'rentals:reservation_invoice_download' reservation.id %}" class="btn btn-sm btn-primary">PDF</a>
+                    </div>
                   </div>
                   <div class="col-md-2">
                     <form method="post" action="{% url 'rentals:update_reservation_status' reservation.id %}">
